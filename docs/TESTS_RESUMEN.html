@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resumen de tests</title>
+<style>
+  :root {
+    --bg: #f7f7f5; --surface: #ffffff; --text: #1d1d1f; --muted: #5f6368; --border: #e3e3df;
+    --accent: #1f4e8c; --ok: #1e7a46; --ok-bg: #e6f4ec; --new: #7a4a00; --new-bg: #fdf0dc;
+    --fix: #8a1c3b; --fix-bg: #fbe7ed; --orig: #3d4a5c; --orig-bg: #eceff3; --code-bg: #f0f0ec;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141416; --surface: #1d1d20; --text: #ececee; --muted: #a0a3a8; --border: #2e2e33;
+      --accent: #8ab4f8; --ok: #6fd39b; --ok-bg: #18301f; --new: #f5c77e; --new-bg: #3a2c12;
+      --fix: #f49ab3; --fix-bg: #3a1a24; --orig: #b9c3d1; --orig-bg: #262b33; --code-bg: #26262a;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141416; --surface: #1d1d20; --text: #ececee; --muted: #a0a3a8; --border: #2e2e33;
+    --accent: #8ab4f8; --ok: #6fd39b; --ok-bg: #18301f; --new: #f5c77e; --new-bg: #3a2c12;
+    --fix: #f49ab3; --fix-bg: #3a1a24; --orig: #b9c3d1; --orig-bg: #262b33; --code-bg: #26262a;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 980px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1 { font-size: 1.7rem; margin: 0 0 4px; }
+  h2 { font-size: 1.15rem; margin: 36px 0 4px; }
+  .lead { color: var(--muted); margin: 0 0 20px; }
+  .why { color: var(--muted); margin: 0 0 12px; font-size: .93rem; }
+  code { font: .86em ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--code-bg);
+    padding: 1px 5px; border-radius: 4px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 20px 0; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+  .stat b { display: block; font-size: 1.5rem; }
+  .stat span { color: var(--muted); font-size: .85rem; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .85rem; color: var(--muted); margin-bottom: 8px; }
+  .tag { display: inline-block; font-size: .72rem; font-weight: 600; padding: 2px 7px; border-radius: 999px; white-space: nowrap; }
+  .t-new { color: var(--new); background: var(--new-bg); }
+  .t-fix { color: var(--fix); background: var(--fix-bg); }
+  .t-orig { color: var(--orig); background: var(--orig-bg); }
+  .table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; }
+  table { width: 100%; border-collapse: collapse; min-width: 640px; }
+  th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  th { font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); font-weight: 600; }
+  tr:last-child td { border-bottom: 0; }
+  td:first-child { width: 38%; }
+  td.origin { width: 92px; }
+  .file { display: block; color: var(--muted); font-size: .78rem; margin-top: 3px; }
+  .callout { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent);
+    border-radius: 8px; padding: 12px 16px; margin: 12px 0; }
+  ul.gaps { margin: 8px 0 0; padding-left: 20px; }
+  ul.gaps li { margin: 4px 0; }
+  footer { margin-top: 40px; color: var(--muted); font-size: .85rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Disruption Companion: tests más importantes</h1>
+  <p class="lead">Selección de los tests que respaldan las decisiones del caso, agrupados por el riesgo que cubren. Ejecutar con <code>npm test</code> (<code>node:test</code>, sin dependencias extra).</p>
+
+  <div class="stats">
+    <div class="stat"><b>58</b><span>tests, todos en verde</span></div>
+    <div class="stat"><b>3</b><span>archivos de test</span></div>
+    <div class="stat"><b>11 / 11</b><span>mutaciones del código detectadas</span></div>
+    <div class="stat"><b>38</b><span>tests generados originalmente</span></div>
+  </div>
+
+  <div class="callout">
+    <b>Los tests no se tomaron como fuente de verdad.</b> Los 38 originales los generó la IA. Se auditaron contra el enunciado: un test validaba un fallo de seguridad (auto-aprobación con cualquier <code>caseId</code>), otros eran relleno. Cada test nuevo se verificó <b>rompiendo el código a propósito</b> y confirmando que falla.
+  </div>
+
+  <div class="legend">
+    <span><span class="tag t-orig">original</span> generado en la primera versión</span>
+    <span><span class="tag t-fix">corregido</span> cambió la expectativa tras la auditoría</span>
+    <span><span class="tag t-new">nuevo</span> agregado tras la auditoría o el code review</span>
+  </div>
+
+  <h2>1. Caso base del enunciado (reserva ABC123)</h2>
+  <p class="why">Demuestra que el sistema resuelve el caso pedido: qué pasó con el viaje y qué corresponde ofrecer o comunicar.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Qué comprueba</th><th>Por qué importa</th><th>Origen</th></tr></thead>
+    <tbody>
+      <tr><td>Retraso de 160 min en S1 ⇒ la conexión a S2 se pierde (holgura −90 min)<span class="file">assess-disruption.spec.ts</span></td><td>Detecta la modificación relevante y la presenta como <b>predicción</b>, no como hecho.</td><td class="origin"><span class="tag t-orig">original</span></td></tr>
+      <tr><td>R1 no aplica (160 &lt; 180); el derecho a reprogramar viene de R3 (conexión perdida)<span class="file">assess-disruption.spec.ts</span></td><td>Aplica la política tal como está escrita, sin redondear a favor de un derecho.</td><td class="origin"><span class="tag t-orig">original</span></td></tr>
+      <tr><td>LEGACY_MIRROR (degradada, dice ON_TIME) se descarta y no contradice el retraso<span class="file">assess-disruption.spec.ts</span></td><td>Fuentes contradictorias: una fuente degradada nunca pesa en la decisión.</td><td class="origin"><span class="tag t-orig">original</span></td></tr>
+      <tr><td>Grupo con menor (R5) ⇒ <code>HUMAN_REVIEW</code>; al pasajero solo hechos, sin opciones ni promesas<span class="file">assess-disruption.spec.ts</span></td><td>Define cuándo interviene una persona y qué se puede comunicar mientras tanto.</td><td class="origin"><span class="tag t-orig">original</span></td></tr>
+      <tr><td>O1 ofrecible; O2 rechazada (1 asiento para 2 pasajeros + cobro); O3 rechazada (tarifa no reembolsable)<span class="file">assess-disruption.spec.ts</span></td><td>Las opciones de la tool son candidatas, no decisiones: se validan contra reserva y política.</td><td class="origin"><span class="tag t-orig">original</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>2. Acciones de alto impacto y control humano</h2>
+  <p class="why">Cambiar una reserva es irreversible: nunca sin confirmación, nunca saltándose la aprobación humana, nunca dos veces.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Qué comprueba</th><th>Por qué importa</th><th>Origen</th></tr></thead>
+    <tbody>
+      <tr><td>Con R5, confirmar O1 ⇒ <code>REJECTED APPROVAL_REQUIRED</code> y <code>create_rebooking_request</code> nunca se invoca<span class="file">application.spec.ts</span></td><td>El test original daba por buena la reprogramación con cualquier <code>caseId</code>: validaba el fallo de seguridad.</td><td class="origin"><span class="tag t-fix">corregido</span></td></tr>
+      <tr><td>Un <code>caseId</code> real obtenido con <code>?act=true</code> no sirve como auto-aprobación<span class="file">application.spec.ts</span></td><td>Reproduce el ataque completo: el cliente recibía un <code>caseId</code> válido y lo reutilizaba.</td><td class="origin"><span class="tag t-new">nuevo</span></td></tr>
+      <tr><td>Un REFUND nunca se envía a <code>create_rebooking_request</code>; sin derecho de política queda solo para agente<span class="file">application.spec.ts</span></td><td>Hallazgo del code review: una devolución podía ejecutarse como reprogramación.</td><td class="origin"><span class="tag t-new">nuevo</span></td></tr>
+      <tr><td>Doble click: la segunda llamada recibe 409 y se trata como éxito idempotente<span class="file">application.spec.ts</span></td><td>Reintentos y reentregas no crean dos reprogramaciones.</td><td class="origin"><span class="tag t-orig">original</span></td></tr>
+      <tr><td>503 ⇒ reintento con la <b>misma</b> clave; si persiste ⇒ <code>INDETERMINATE</code> + caso humano<span class="file">application.spec.ts</span></td><td>Ante un resultado desconocido no se afirma éxito ni fallo: una persona concilia.</td><td class="origin"><span class="tag t-orig">original</span></td></tr>
+      <tr><td>Si falla <code>create_human_case</code>, no se notifica "una persona te contactará"<span class="file">application.spec.ts</span></td><td>No se promete al pasajero algo que no existe.</td><td class="origin"><span class="tag t-orig">original</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>3. Datos no confiables ⇒ humano (fail-closed)</h2>
+  <p class="why">Los datos operacionales pueden estar viejos o contradecirse. Regla: si no hay datos confiables, no se asume "sin novedad".</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Qué comprueba</th><th>Por qué importa</th><th>Origen</th></tr></thead>
+    <tbody>
+      <tr><td>Dos fuentes confiables discrepan ⇒ <code>SOURCE_CONFLICT</code>, sin comunicar nada<span class="file">assess-disruption.spec.ts</span></td><td>No se adivina cuál fuente tiene razón.</td><td class="origin"><span class="tag t-orig">original</span></td></tr>
+      <tr><td>Solo informa una fuente degradada ⇒ <code>HUMAN_REVIEW</code> (<code>NO_TRUSTED_SOURCE</code>)<span class="file">assess-disruption.spec.ts</span></td><td>Antes respondía <code>NO_ACTION</code>: silencio ante datos que no se pueden verificar.</td><td class="origin"><span class="tag t-fix">corregido</span></td></tr>
+      <tr><td>Sin ningún evento de estado ⇒ <code>NO_ACTION</code><span class="file">assess-disruption.spec.ts</span></td><td>Contrapeso: no derivar a humano cada reserva sin novedades.</td><td class="origin"><span class="tag t-new">nuevo</span></td></tr>
+      <tr><td>Evento de fuente confiable con fecha inválida, estado desconocido (DIVERTED) o tipo desconocido ⇒ humano<span class="file">assess-disruption.spec.ts</span></td><td>Hallazgo del code review: estos casos terminaban en silencio.</td><td class="origin"><span class="tag t-new">nuevo</span></td></tr>
+      <tr><td>Feed viejo o evento de más de 120 min ⇒ no se comunica<span class="file">assess-disruption.spec.ts</span></td><td>Controla la frescura de los datos, como pide el enunciado.</td><td class="origin"><span class="tag t-orig">original</span></td></tr>
+      <tr><td>Opciones vencidas (TTL de 120 s) o con TTL incalculable ⇒ no se ofrecen<span class="file">assess-disruption.spec.ts</span></td><td>Con TTL inválido las opciones nunca vencían.</td><td class="origin"><span class="tag t-new">nuevo</span></td></tr>
+      <tr><td>Falla o timeout de una tool de lectura ⇒ humano, sin excepción<span class="file">assess-disruption.spec.ts, application.spec.ts</span></td><td>Una tool caída degrada hacia una persona; no responde 500.</td><td class="origin"><span class="tag t-orig">original</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>4. Política versionada (R1–R5)</h2>
+  <p class="why">Las reglas llegan como texto: se evalúan sin <code>eval</code> y en los bordes exactos.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Qué comprueba</th><th>Por qué importa</th><th>Origen</th></tr></thead>
+    <tbody>
+      <tr><td>R1 en el borde: 179 min no aplica, 180 min aplica<span class="file">assess-disruption.spec.ts</span></td><td>Un error de borde otorga o niega un derecho.</td><td class="origin"><span class="tag t-new">nuevo</span></td></tr>
+      <tr><td>R2: 240 min en vuelo internacional ⇒ <code>MEAL_VOUCHER</code>; con 239 no<span class="file">assess-disruption.spec.ts</span></td><td>Antes R2 nunca se probaba aplicando.</td><td class="origin"><span class="tag t-new">nuevo</span></td></tr>
+      <tr><td>R2 sin poder saber si es internacional ⇒ <code>POLICY_UNEVALUABLE</code> (humano)<span class="file">assess-disruption.spec.ts</span></td><td>Un dato desconocido no se asume a favor ni en contra.</td><td class="origin"><span class="tag t-new">nuevo</span></td></tr>
+      <tr><td>R4: compensación solicitada ⇒ aprobación humana<span class="file">assess-disruption.spec.ts</span></td><td>Emitir una compensación es de alto impacto.</td><td class="origin"><span class="tag t-orig">original</span></td></tr>
+      <tr><td>Condición no soportada (p. ej. <code>process.exit(1)</code>) ⇒ inevaluable, no se ejecuta código<span class="file">assess-disruption.spec.ts</span></td><td>La política es dato externo: nunca se ejecuta.</td><td class="origin"><span class="tag t-orig">original</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>5. Comunicación y datos personales</h2>
+  <p class="why">No se envía información no validada y la PII no sale de la capa de datos.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Qué comprueba</th><th>Por qué importa</th><th>Origen</th></tr></thead>
+    <tbody>
+      <tr><td>Toda notificación sale con <code>policy_ref</code>; un 422 se reporta como error, nunca como enviada<span class="file">application.spec.ts</span></td><td>Requisito explícito de <code>notify_passenger</code> en el enunciado; antes sin test.</td><td class="origin"><span class="tag t-new">nuevo</span></td></tr>
+      <tr><td>El mapper descarta nombre, email, teléfono, documento y loyalty: el dominio nunca los ve<span class="file">data-layer.spec.ts</span></td><td>Protege los datos personales en el borde, por construcción.</td><td class="origin"><span class="tag t-new">nuevo</span></td></tr>
+      <tr><td><code>get_eligible_options</code> recibe la reserva sin PII (de punta a punta)<span class="file">data-layer.spec.ts</span></td><td>Mínimo privilegio: calcular opciones no requiere datos de contacto.</td><td class="origin"><span class="tag t-new">nuevo</span></td></tr>
+      <tr><td>La salida de la evaluación no contiene PII<span class="file">assess-disruption.spec.ts</span></td><td>Nada sensible llega al pasajero ni a la evidencia del caso humano.</td><td class="origin"><span class="tag t-orig">original</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Qué no cubren los tests (conocido)</h2>
+  <ul class="gaps">
+    <li><b>Capa HTTP:</b> sin test automático; se validó a mano con <code>curl</code> (ver <code>EVIDENCIA_TECNICA.md</code>).</li>
+    <li><b>Escenario de cancelación:</b> sin política real en los mocks; siempre termina en humano.</li>
+    <li><b>Vuelos que cruzan la medianoche o husos horarios:</b> sin fixtures; documentado como riesgo.</li>
+    <li><b>Idempotencia de <code>?act=true</code> y autenticación:</b> no implementadas en V1; documentadas en el README §8.</li>
+  </ul>
+
+  <footer>Generado a partir de <code>test/*.spec.ts</code>. Si cambian los tests, actualizar este resumen.</footer>
+</main>
+</body>
+</html>

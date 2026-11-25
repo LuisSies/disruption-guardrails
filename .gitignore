@@ -1,0 +1,6 @@
+node_modules
+dist
+.DS_Store
+# config personal de BMad
+_bmad/config.user.toml
+_bmad/custom/config.user.toml
