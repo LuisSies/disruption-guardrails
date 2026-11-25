@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Llamados a la API</title>
+<style>
+  :root {
+    --bg: #f7f7f5; --surface: #ffffff; --text: #1d1d1f; --muted: #5f6368; --border: #e3e3df;
+    --accent: #1f4e8c; --code-bg: #f0f0ec;
+    --ok: #1e7a46; --ok-bg: #e6f4ec; --err: #8a1c3b; --err-bg: #fbe7ed;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141416; --surface: #1d1d20; --text: #ececee; --muted: #a0a3a8; --border: #2e2e33;
+      --accent: #8ab4f8; --code-bg: #26262a;
+      --ok: #6fd39b; --ok-bg: #18301f; --err: #f49ab3; --err-bg: #3a1a24;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141416; --surface: #1d1d20; --text: #ececee; --muted: #a0a3a8; --border: #2e2e33;
+    --accent: #8ab4f8; --code-bg: #26262a;
+    --ok: #6fd39b; --ok-bg: #18301f; --err: #f49ab3; --err-bg: #3a1a24;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1 { font-size: 1.7rem; margin: 0 0 4px; }
+  .lead { color: var(--muted); margin: 0 0 20px; }
+  code { font: .84em ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--code-bg);
+    padding: 1px 5px; border-radius: 4px; word-break: break-all; }
+  .table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; }
+  table { width: 100%; border-collapse: collapse; min-width: 760px; }
+  th, td { text-align: left; vertical-align: top; padding: 12px; border-bottom: 1px solid var(--border); }
+  th { font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); font-weight: 600; }
+  tr:last-child td { border-bottom: 0; }
+  td.n { width: 36px; color: var(--muted); font-weight: 600; }
+  td.req { width: 48%; }
+  .desc { display: block; font-weight: 600; margin-bottom: 6px; }
+  .line { display: block; margin-top: 4px; }
+  .method { display: inline-block; font: 600 .72rem ui-monospace, Menlo, monospace; color: var(--accent);
+    border: 1px solid var(--accent); border-radius: 4px; padding: 0 5px; margin-right: 4px; }
+  .label { color: var(--muted); font-size: .8rem; margin-right: 4px; }
+  .http { display: inline-block; font-weight: 700; font-size: .85rem; padding: 2px 8px; border-radius: 999px; }
+  .h200 { color: var(--ok); background: var(--ok-bg); }
+  .h400 { color: var(--err); background: var(--err-bg); }
+  .callout { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent);
+    border-radius: 8px; padding: 12px 16px; margin: 20px 0 0; font-size: .93rem; }
+  footer { margin-top: 32px; color: var(--muted); font-size: .85rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Llamados a la API</h1>
+  <p class="lead">Peticiones de prueba contra el despliegue en Render (<code>https://disruption-guardrails.onrender.com</code>), con tools mockeadas y el caso base del enunciado (reserva <code>ABC123</code>).</p>
+
+  <div class="table-wrap"><table>
+    <thead><tr><th>#</th><th>Petición</th><th>HTTP esperado</th><th>Resultado</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="n">1</td>
+        <td class="req"><span class="desc">Evaluar ABC123</span>
+          <span class="line"><span class="method">POST</span><code>https://disruption-guardrails.onrender.com/v1/bookings/ABC123/disruption-assessment</code></span></td>
+        <td><span class="http h200">200</span></td>
+        <td><code>HUMAN_REVIEW</code>, motivo <code>HUMAN_APPROVAL_REQUIRED</code> (R5: viaja un menor).</td>
+      </tr>
+      <tr>
+        <td class="n">2</td>
+        <td class="req"><span class="desc">Evaluar y ejecutar acciones</span>
+          <span class="line"><span class="method">POST</span><code>https://disruption-guardrails.onrender.com/v1/bookings/ABC123/disruption-assessment?act=true</code></span></td>
+        <td><span class="http h200">200</span></td>
+        <td>Crea el caso <code>HC-4471</code> (cola <code>DISRUPTION_L2</code>, SLA 45 min) y la notificación <code>NT-9912</code>.</td>
+      </tr>
+      <tr>
+        <td class="n">3</td>
+        <td class="req"><span class="desc">Confirmar O1</span>
+          <span class="line"><span class="method">POST</span><code>https://disruption-guardrails.onrender.com/v1/bookings/ABC123/rebooking-confirmations</code></span>
+          <span class="line"><span class="label">Body</span><code>{"optionId":"O1"}</code></span></td>
+        <td><span class="http h200">200</span></td>
+        <td><code>REJECTED APPROVAL_REQUIRED</code>: con R5 la reprogramación la ejecuta un agente.</td>
+      </tr>
+      <tr>
+        <td class="n">4</td>
+        <td class="req"><span class="desc">Confirmar O1 enviando un <code>caseId</code> como "aprobación"</span>
+          <span class="line"><span class="method">POST</span><code>https://disruption-guardrails.onrender.com/v1/bookings/ABC123/rebooking-confirmations</code></span>
+          <span class="line"><span class="label">Body</span><code>{"optionId":"O1","approval":{"caseId":"HC-4471"}}</code></span></td>
+        <td><span class="http h200">200</span></td>
+        <td><code>REJECTED APPROVAL_REQUIRED</code>: el cliente no puede auto-aprobarse (corrige el salto de aprobación).</td>
+      </tr>
+      <tr>
+        <td class="n">5</td>
+        <td class="req"><span class="desc">Reserva inexistente</span>
+          <span class="line"><span class="method">POST</span><code>https://disruption-guardrails.onrender.com/v1/bookings/ZZZ999/disruption-assessment</code></span></td>
+        <td><span class="http h200">200</span></td>
+        <td><code>HUMAN_REVIEW TRIP_UNAVAILABLE</code>: falla controlada, sin error 500.</td>
+      </tr>
+      <tr>
+        <td class="n">6</td>
+        <td class="req"><span class="desc">Localizador inválido</span>
+          <span class="line"><span class="method">POST</span><code>https://disruption-guardrails.onrender.com/v1/bookings/abc/disruption-assessment</code></span></td>
+        <td><span class="http h400">400</span></td>
+        <td><code>INVALID_BOOKING_ID</code>.</td>
+      </tr>
+      <tr>
+        <td class="n">7</td>
+        <td class="req"><span class="desc">Pedir compensación</span>
+          <span class="line"><span class="method">POST</span><code>https://disruption-guardrails.onrender.com/v1/bookings/ABC123/disruption-assessment</code></span>
+          <span class="line"><span class="label">Body</span><code>{"compensationRequested":true}</code></span></td>
+        <td><span class="http h200">200</span></td>
+        <td>Derechos R3 (reprogramar sin costo), <b>R4 (compensación, requiere aprobación humana)</b> y R5.</td>
+      </tr>
+      <tr>
+        <td class="n">8</td>
+        <td class="req"><span class="desc">Confirmar O2</span>
+          <span class="line"><span class="method">POST</span><code>https://disruption-guardrails.onrender.com/v1/bookings/ABC123/rebooking-confirmations</code></span>
+          <span class="line"><span class="label">Body</span><code>{"optionId":"O2"}</code></span></td>
+        <td><span class="http h200">200</span></td>
+        <td><code>REJECTED OPTION_NOT_OFFERABLE</code>: 1 asiento para 2 pasajeros y requiere pago.</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout">
+    Las peticiones con body llevan el header <code>Content-Type: application/json</code>. Ejemplo con <code>curl</code>:<br>
+    <code>curl -X POST https://disruption-guardrails.onrender.com/v1/bookings/ABC123/rebooking-confirmations -H 'content-type: application/json' -d '{"optionId":"O1"}'</code><br><br>
+    El plan gratuito de Render apaga el servicio cuando está inactivo: la primera petición puede tardar unos 50 segundos.
+  </div>
+
+  <footer>Resultados verificados contra el despliegue en Render. Todos los endpoints son <code>POST</code>; abrir la URL base en el navegador responde 404.</footer>
+</main>
+</body>
+</html>
